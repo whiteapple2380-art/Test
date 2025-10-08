@@ -5,6 +5,52 @@
   <title>遷移テスト</title>
 </head>
 <body>
+
+  <style>
+    body {
+      font-family: "Noto Sans JP", sans-serif;
+      display: flex;                /* 横並び・縦並びの制御を有効化 */
+      flex-direction: column;       /* 上から下へ並べる */
+      align-items: center;          /* 横方向の中央揃え */
+      justify-content: center;      /* 縦方向の中央揃え */
+      height: 100vh;                /* 画面全体の高さを確保 */
+      margin: 0;                    /* 余白を消す */
+      background-color: #f8f8f8;    /* 背景色（任意） */
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;  /* 要素の間に少し隙間 */
+    }
+
+    input, button {
+      padding: 8px 12px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #4e8ef7;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #3b74d9;
+    }
+  </style>
+</head>
+
+<body>
+
   <h1>合言葉ページ</h1>
   <form id="gate">
     <input id="key" type="password" placeholder="合言葉を入力してください" required>
