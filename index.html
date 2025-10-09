@@ -2,78 +2,157 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <title>遷移テスト</title>
-</head>
-<body>
-
+  <title>D:IV_vision運営</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
       font-family: "Noto Sans JP", sans-serif;
-      display: flex;                /* 横並び・縦並びの制御を有効化 */
-      flex-direction: column;       /* 上から下へ並べる */
-      align-items: center;          /* 横方向の中央揃え */
-      justify-content: center;      /* 縦方向の中央揃え */
-      height: 100vh;                /* 画面全体の高さを確保 */
-      margin: 0;                    /* 余白を消す */
-      background-color: #f8f8f8;    /* 背景色（任意） */
-    }
-
-    h1 {
-      margin-bottom: 20px;
-    }
-
-    form {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;  /* 要素の間に少し隙間 */
+      justify-content: center;
+      height: 80vh;
+      margin: 0;
+      background-color: #f8f8f8;
     }
 
-    input, button {
+    h1 { margin-bottom: 20px; }
+
+    /* フォーム本体 */
+    #gate {
+      width: 320px;
+      text-align: center; /* ボタンを中央寄せ */
+    }
+
+    /* 入力欄：縦積み＋幅いっぱい＋中央寄せ */
+    #gate input {
+      display: block;
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+      margin-top: 15px;
+      margin-bottom: 30px;
       padding: 8px 12px;
-      font-size: 16px;
+      font-size: 20px;
       border-radius: 6px;
       border: 1px solid #ccc;
     }
 
-    button {
-      background-color: #4e8ef7;
-      color: white;
-      border: none;
+    /* ボタンは元サイズのまま */
+    #gate button {
+      display: inline-block;
+      width: auto;
+      padding: 8px 12px;
+      font-size: 20px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background-color: #000000;
+      color: #fff;
       cursor: pointer;
     }
+    #gate button:hover { background-color: #3b74d9; }
 
-    button:hover {
-      background-color: #3b74d9;
+    /* 右下固定テキスト */
+    .footer-text {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 12px;
+      color: #666;
+      line-height: 1.5;
+      max-width: min(48ch, 90vw);
+      text-align: right;
     }
+
+    /* ロゴ画像が大きすぎる環境向けに安全策 */
+    .logo {
+      width: 500px;
+      max-width: 90vw;
+      height: auto;
+      margin-bottom: 10px;
+      display: block;
+    }
+    
+    .footer-text {
+	  position: fixed;
+	  bottom: 10px;
+	  right: 10px;
+	  font-size: 12px;
+	  color: #666;
+	  line-height: 1.5;
+	  text-align: right;     /* ← 全体を右寄せ */
+	  max-width: 90vw;       /* ← はみ出し防止 */
+	}
+
+	.footer-text .nowrap {
+	  white-space: nowrap;   /* 折り返し禁止 */
+	  display: inline-block; /* ← block にすると左寄せに見えるので inline-block */
+	}
+
+
   </style>
+
+  <!-- HTML構築後に実行させる -->
+  <script defer>
+    // 合言葉の SHA-256 (UTF-8)
+    const SECRET_SHA256 = "e1bf06d5a7ed74852ee9e76dd9a05f600a4fe0c4275ace7876a6eec1ec6d05fc";
+
+    // 遷移先（日本語を含むので念のためエンコード版を使用）
+    const DEST = "https://sites.google.com/view/divvision/%E3%83%9B%E3%83%BC%E3%83%A0";
+
+    const toHex = (buf) => [...new Uint8Array(buf)]
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
+
+    async function sha256Hex(text) {
+      if (!(window.crypto && crypto.subtle)) {
+        alert("この環境では検証処理が使えません。HTTPSのサイト上でお試しください。");
+        throw new Error("SubtleCrypto not available");
+      }
+      const data = new TextEncoder().encode(text);
+      const digest = await crypto.subtle.digest("SHA-256", data);
+      return toHex(digest);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("gate");
+      const input = document.getElementById("key");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        try {
+          // 前後空白を削除し、全角/半角の揺れを抑える
+          const raw = input.value.trim().normalize("NFKC");
+          const h = await sha256Hex(raw);
+          if (h === SECRET_SHA256) {
+            window.location.href = DEST;
+          } else {
+            alert("合言葉が違います。");
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    });
+  </script>
 </head>
 
 <body>
+  <img src="DIV--B.png" alt="D:IV_vision ロゴ" class="logo">
 
-<img src="合同表紙.png" alt="ロゴ" style="width:100px; margin-bottom:20px;">
+  <h1>D:IV_vision運営チームです。</h1>
+  <h1>D:アリスから受け取った合言葉をご入力ください。</h1>
 
-  <h1>合言葉ページ</h1>
   <form id="gate">
-    <input id="key" type="password" placeholder="合言葉を入力してください" required>
-    <button type="submit">入る</button>
+    <input id="key" type="text" placeholder="合言葉を入力してください" required />
+    <button type="submit">ENTER</button>
   </form>
 
-  <script>
-    const SECRET = "kntw";  // 合言葉
-    const DEST   = "https://sites.google.com/view/divvision/%E3%83%9B%E3%83%BC%E3%83%A0"; // ここを遷移先URLにする
+	<div class="footer-text">
+	  <span class="nowrap">こちらは非公式・第四境界Webオンリー謎解き企画の関連ページです。</span><br>
+	  <span class="nowrap">第四境界公式および実在の人物・団体とは一切関係がありません。</span><br>
+	  主催：D:Ⅳ_vision運営<br>
+	  連絡先：d4kk.webonly@gmail.com
+	</div>
 
-    document.getElementById("gate").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const input = document.getElementById("key").value.trim();
-
-      if (input === SECRET) {
-        // ここでGoogleへジャンプ
-        window.location.href = DEST;
-      } else {
-        alert("合言葉が違います。");
-      }
-    });
-  </script>
-</body>
 </html>
