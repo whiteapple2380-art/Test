@@ -4,19 +4,25 @@
   <meta charset="utf-8" />
   <title>D:IV_vision運営</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
   <style>
+  
+    /* 全体レイアウト（中央配置） */
     body {
-      font-family: "Noto Sans JP", sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 80vh;
-      margin: 0;
-      background-color: #f8f8f8;
+      font-family: "Noto Sans JP", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 100svh; /* モバイルのアドレスバー考慮 */
+      margin: 0; background: #f8f8f8;
+      -webkit-text-size-adjust: 100%;
     }
 
-    h1 { margin-bottom: 20px; }
+
+    /* 見出しはクランプで自動調整（最小16px～理想20px～最大24px） */
+    h1 {
+      margin: 0 16px 12px;
+      font-size: clamp(16px, 2.5vw, 24px);
+      text-align: center;
+    }
 
     /* フォーム本体 */
     #gate {
@@ -24,71 +30,74 @@
       text-align: center; /* ボタンを中央寄せ */
     }
 
-    /* 入力欄：縦積み＋幅いっぱい＋中央寄せ */
-    #gate input {
-      display: block;
-      width: 100%;
-      text-align: center;
-      box-sizing: border-box;
-      margin-top: 15px;
-      margin-bottom: 30px;
-      padding: 8px 12px;
-      font-size: 20px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-
-    /* ボタンは元サイズのまま */
-    #gate button {
-      display: inline-block;
-      width: auto;
-      padding: 8px 12px;
-      font-size: 20px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      background-color: #000000;
-      color: #fff;
-      cursor: pointer;
-    }
-    #gate button:hover { background-color: #3b74d9; }
-
-    /* 右下固定テキスト */
-    .footer-text {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      font-size: 12px;
-      color: #666;
-      line-height: 1.5;
-      max-width: min(48ch, 90vw);
-      text-align: right;
-    }
-
-    /* ロゴ画像が大きすぎる環境向けに安全策 */
+    /* ロゴは端末幅に応じて縮む */
     .logo {
       width: 800px;
-      max-width: 90vw;
+      max-width: min(90vw, 800px);
       height: auto;
       margin-bottom: 10px;
       display: block;
     }
     
+    /* フォームの箱は“端末幅に合わせて縮む” */
+    #gate {
+      width: min(92vw, 340px);   /* PCでは340px、スマホでは画面幅に追従 */
+      text-align: center;
+      margin: 8px 0;
+    }
+
+    /* 入力欄は箱いっぱい・フォントはクランプで可変 */
+    #gate input {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: center;
+      padding: 12px;
+      margin: 15px 0 24px;
+      font-size: clamp(16px, 4vw, 20px); /* iOSのズーム防止で最小16px */
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background: #fff;
+    }
+
+    #gate input::placeholder { text-align: center; }
+
+    /* ボタンは元サイズのまま。フォントだけ可変 */
+    #gate button {
+      display: inline-block;
+      width: auto;
+      padding: 8px 14px;
+      font-size: clamp(16px, 3.5vw, 20px);
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background: #000; color: #fff; cursor: pointer;
+    }
+    
+    
+    #gate button:hover { background: #3b74d9; }
+    
+
+    /* 右下フッター（4行構成のまま、1・2行だけ折り返し禁止） */
     .footer-text {
-	  position: fixed;
-	  bottom: 10px;
-	  right: 10px;
-	  font-size: 12px;
-	  color: #666;
-	  line-height: 1.5;
-	  text-align: right;     /* ← 全体を右寄せ */
-	  max-width: 90vw;       /* ← はみ出し防止 */
-	}
-
-	.footer-text .nowrap {
-	  white-space: nowrap;   /* 折り返し禁止 */
-	  display: inline-block; /* ← block にすると左寄せに見えるので inline-block */
-	}
-
+      position: fixed;
+      right: calc(env(safe-area-inset-right) + 10px);
+      bottom: calc(env(safe-area-inset-bottom) + 10px);
+      font-size: 12px;
+      color: #666;
+      line-height: 1.5;
+      text-align: right;
+      max-width: 96vw; /* 画面の端からはみ出しを抑える */
+    }
+    
+    
+    
+    .footer-text .nowrap {
+      white-space: nowrap;       /* 折り返し禁止（1・2行目に付与） */
+      display: inline-block;     /* 右寄せのまま一塊として扱う */
+      max-width: 96vw;           /* 万一長い場合の保険 */
+      overflow-x: auto;          /* はみ出す時は横スクロールで全文読める */
+      -webkit-overflow-scrolling: touch;
+    }
 
   </style>
 
@@ -141,7 +150,7 @@
   <img src="DIV--B.png" alt="D:IV_vision ロゴ" class="logo">
 
   <h1>D:IV_vision運営チームです。</h1>
-  <h1>D:アリスから受け取った合言葉をご入力ください。</h1>
+  <h1>アリスから受け取った合言葉をご入力ください。</h1>
 
   <form id="gate">
     <input id="key" type="text" placeholder="合言葉を入力してください" required />
