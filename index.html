@@ -24,12 +24,6 @@
       text-align: center;
     }
 
-    /* フォーム本体 */
-    #gate {
-      width: 320px;
-      text-align: center; /* ボタンを中央寄せ */
-    }
-
     /* ロゴは端末幅に応じて縮む */
     .logo {
       width: 800px;
@@ -104,10 +98,19 @@
   <!-- HTML構築後に実行させる -->
   <script defer>
     // 合言葉の SHA-256 (UTF-8)
-    const SECRET_SHA256 = "e1bf06d5a7ed74852ee9e76dd9a05f600a4fe0c4275ace7876a6eec1ec6d05fc";
+    // 1つ目の合言葉	
+    const SECRET_SHA256_1 = "e1bf06d5a7ed74852ee9e76dd9a05f600a4fe0c4275ace7876a6eec1ec6d05fc";
+
+    // 2つ目の合言葉
+    const SECRET_SHA256_2 = "3a1a4061eb44866a761c0fe9844e011d927b72b0a823c9519e5ee5bab20e464f";
+	
 
     // 遷移先（日本語を含むので念のためエンコード版を使用）
-    const DEST = "https://sites.google.com/view/divvision/%E3%83%9B%E3%83%BC%E3%83%A0";
+    // 1つ目の遷移先
+    const DEST_1 = "https://sites.google.com/view/divvision/%E3%83%9B%E3%83%BC%E3%83%A0";
+
+    // 2つ目の遷移先
+    const DEST_2 = "https://sites.google.com/view/divvision-phase2";
 
     const toHex = (buf) => [...new Uint8Array(buf)]
       .map(b => b.toString(16).padStart(2, "0"))
@@ -133,9 +136,13 @@
           // 前後空白を削除し、全角/半角の揺れを抑える
           const raw = input.value.trim().normalize("NFKC");
           const h = await sha256Hex(raw);
-          if (h === SECRET_SHA256) {
-            window.location.href = DEST;
-          } else {
+          if (h === SECRET_SHA256_1) {
+            window.location.href = DEST_1;
+          } 
+          else if (h === SECRET_SHA256_2) {
+          	window.location.href = DEST_2;
+          } 
+          else {
             alert("合言葉が違います。");
           }
         } catch (err) {
